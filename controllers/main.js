@@ -1,6 +1,5 @@
 const CustomAPIError = require('../errors/custom-error')
 const jwt = require('jsonwebtoken')
-require('dotenv')
 const login = async (req, res) => {
     const { username, password } = req.body
   // mongoose validation
@@ -26,22 +25,9 @@ const login = async (req, res) => {
 }
 
 const dashboard = async (req, res) => {
-  //we have passed the returned token from the login route to the dashboard with Bearer + token
-  const authHeader = req.headers.authorization
-  if(!authHeader || !authHeader.startsWith('Bearer ')){
-    throw new CustomAPIError('Token not present', 401)
-  }
-
-  //to acces the token bcz split returns array 
-  const token = authHeader.split(' ')[1]
-  try {
-    //verify fxn will convert the token and decode it, it will now show our payload and expiration in object form
-    const decoded = jwt.verify(token,process.env.JWT_TOKEN)
-    const luckyNumber = Math.floor(Math.random() * 100)
-    res.status(200).json({ msg: `Hello ${decoded.username} Welcome!`, secret: `your secret code is ${luckyNumber} and now you can acess it` })
-  } catch (error) {
-    throw new CustomAPIError('You are not authorized to access this route',401)
-  }
+  console.log(req.users)
+  const luckyNumber = Math.floor(Math.random() * 100)
+        res.status(200).json({ msg: `Hello ${req.users.username} Welcome!`, secret: `your secret code is ${luckyNumber} and now you can acess it` })
     
 }
 
