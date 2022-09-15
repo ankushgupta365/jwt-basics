@@ -1,11 +1,11 @@
 const CustomAPIError = require('../errors/custom-error')
 const jwt = require('jsonwebtoken')
-
+const {UnauthenticationError} = require('../errors')
 const authMidlleware = async (req, res, next) => {
     //we have passed the returned token from the login route to the dashboard with Bearer + token
     const authHeader = req.headers.authorization
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        throw new CustomAPIError('Token not present', 401)
+        throw new UnauthenticationError('Token not present')
     }
 
     //to acces the token bcz split returns array 
@@ -20,7 +20,7 @@ const authMidlleware = async (req, res, next) => {
         //by setting object in req we are calling next to run the next route
         next()
       } catch (error) {
-        throw new CustomAPIError('You are not authorized to access this route',401)
+        throw new UnauthenticationError('You are not authorized to see this page')
       }
 }
 
